@@ -10,6 +10,7 @@ __pycache__/
 artifacts/*
 !artifacts/README.md
 model.pt
+data
 data/*
 !data/README.md
 
