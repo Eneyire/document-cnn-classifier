@@ -26,6 +26,11 @@ def test_training_config_validates_finite_learning_rate() -> None:
         TrainingConfig(learning_rate=float("nan"))
 
 
+def test_training_config_validates_validation_fraction() -> None:
+    with pytest.raises(ValueError, match="validation_fraction"):
+        TrainingConfig(validation_fraction=1.0)
+
+
 def test_train_one_epoch_and_evaluate() -> None:
     values = torch.tensor([[3.0, 0.0], [0.0, 3.0], [2.0, 0.0]])
     labels = torch.tensor([0, 1, 0])
@@ -40,10 +45,13 @@ def test_train_one_epoch_and_evaluate() -> None:
         nn.CrossEntropyLoss(),
         torch.device("cpu"),
     )
-    accuracy = evaluate(model, loader, torch.device("cpu"))
+    metrics = evaluate(model, loader, torch.device("cpu"), ["first", "second"])
 
     assert math.isfinite(loss)
-    assert 0.0 <= accuracy <= 1.0
+    assert metrics.accuracy == 1.0
+    assert metrics.confusion_matrix == [[2, 0], [0, 1]]
+    assert metrics.per_class[0].precision == 1.0
+    assert metrics.per_class[1].recall == 1.0
     assert not model.training
 
 
@@ -63,4 +71,4 @@ def test_train_and_evaluate_reject_empty_loaders() -> None:
             torch.device("cpu"),
         )
     with pytest.raises(ValueError, match="empty dataset"):
-        evaluate(model, loader, torch.device("cpu"))
+        evaluate(model, loader, torch.device("cpu"), ["first", "second"])

@@ -3,7 +3,7 @@
 import pytest
 import torch
 
-from cnn_classifier.model import DocumentCNN
+from cnn_classifier.model import DocumentCNN, FeatureCNN, create_model
 
 
 def test_forward_returns_one_logit_per_class() -> None:
@@ -25,3 +25,10 @@ def test_forward_rejects_an_unexpected_image_shape() -> None:
 def test_model_requires_at_least_two_classes() -> None:
     with pytest.raises(ValueError, match="num_classes must be at least 2"):
         DocumentCNN(num_classes=1)
+
+
+def test_feature_model_returns_one_logit_per_class() -> None:
+    model = create_model("feature", num_classes=3)
+
+    assert isinstance(model, FeatureCNN)
+    assert model(torch.randn(2, 3, 200, 200)).shape == (2, 3)
