@@ -30,6 +30,16 @@ def test_batch_size_must_be_positive(tmp_path: Path) -> None:
         make_dataloader(tmp_path, batch_size=0)
 
 
+def test_rejects_class_without_supported_images(tmp_path: Path) -> None:
+    (tmp_path / "empty_class").mkdir()
+    populated_class = tmp_path / "populated_class"
+    populated_class.mkdir()
+    Image.new("RGB", (8, 8)).save(populated_class / "sample.png")
+
+    with pytest.raises(ValueError, match="empty_class"):
+        make_dataloader(tmp_path)
+
+
 def test_preprocessing_preserves_rgb_channel_order_and_0_to_255_scale(
     tmp_path: Path,
 ) -> None:

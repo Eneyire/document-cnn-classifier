@@ -18,7 +18,17 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 %matplotlib inline
 
-
+# Implementing a CNN in PyTorch
+# importing necessary libraries
+import torch
+import torchvision
+import matplotlib.pyplot as plt
+from time import time
+from torchvision import datasets, transforms
+from torch import nn, optim
+import torch.utils.data as Data
+from torch import Tensor
+from torch.autograd import Variable
 
 # Printing random images from the dataset
 Training_folder= ROOT_DIR + "Data/Training_data"
@@ -73,17 +83,7 @@ len(Train_img_data)
 train_class_name[0]
 
 
-# Implementing a CNN in PyTorch
-# importing necessary libraries
-import torch
-import torchvision
-import matplotlib.pyplot as plt
-from time import time
-from torchvision import datasets, transforms
-from torch import nn, optim
-import torch.utils.data as Data
-from torch import Tensor
-from torch.autograd import Variable
+
 
 
 # version of pytorch
